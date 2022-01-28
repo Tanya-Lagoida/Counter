@@ -1,0 +1,45 @@
+.all {
+  margin: 200px auto 0;
+  height: 200px;
+  width: 250px;
+  background-color: lightcyan;
+  border-radius: 10px;
+  border: 2px solid teal;
+}
+.monitor {
+  margin: 20px auto 20px;
+  background-color: teal;
+  line-height: 100px;
+  width: 210px;
+  border-radius: 10px;
+  font-size: 40px;
+  text-align: center;
+}
+.monitorMax {
+  color: red;
+  font-size: 60px;
+  font-weight: bolder;
+}
+.button {
+  height: 40px;
+  width: 202px;
+  border: 2px solid teal;
+  border-radius: 10px;
+  margin: 0 auto 20px;
+  display: flex;
+}
+.increase {
+  margin: 10px;
+  background-color: teal;
+  height: 20px;
+  width: 50px;
+  border-radius: 10px;
+}
+.reset {
+  margin: 10px;
+  background-color: teal;
+  height: 20px;
+  width: 150px;
+  border-radius: 10px;
+}
+
