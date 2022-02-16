@@ -2,7 +2,7 @@ import React from 'react';
 import s from './App.module.css';
 
 type MonitorPropsType = {
-  count: number
+  count: number | string
   classMonitor: string
 }
 
