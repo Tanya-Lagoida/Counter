@@ -1,34 +1,34 @@
 import React from 'react';
-import s from './App.module.css';
+import styles from './App.module.css';
 import { Monitor } from './Monitor';
 import { Button } from './Button';
+import { useSelector } from 'react-redux';
+import { AppStateType } from './Redux/ReduxStore';
 
 type CounterPropsType = {
   reset: () => void
   increaseOnOne: () => void
   count: number | string
   classMonitor: string
-  maxValue: number
-  startValue: number
-  isSetDisabled: boolean
 }
 
 export const  Counter = (props: CounterPropsType) => {
-   return <div className={s.all}>
+  const setMaxValue = useSelector<AppStateType, number>(state => state.counter.setMaxValue)
+
+   return <div className={styles.all}>
     <Monitor
       count={props.count}
       classMonitor={props.classMonitor}/>
-    <div className={s.button}>
+    <div className={styles.button}>
       <Button
         onButtonClick={props.increaseOnOne}
-        class={s.increase}
-        isDisabled={props.count === props.maxValue || props.isSetDisabled}
+        class={styles.increase}
+        isDisabled={props.count === setMaxValue || props.count === "Enter values and press 'set'" || props.count === 'Incorrect value!'}
         title={'inc'}/>
       <Button
         onButtonClick={props.reset}
-        class={s.reset}
-        isDisabled={props.isSetDisabled}
-        // isDisabled={props.maxValue > props.startValue && props.maxValue > 0 && props.startValue >= 0 ? false : true }
+        class={styles.reset}
+        isDisabled={props.count === "Enter values and press 'set'" || props.count === 'Incorrect value!'}
         title={'reset'}/>
     </div>
   </div>

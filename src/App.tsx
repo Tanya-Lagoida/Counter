@@ -1,125 +1,104 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import s from './App.module.css';
+import styles from './App.module.css';
 import { Counter } from './Counter';
 import { SetCounter } from './SetCounter';
-
+import { AppStateType } from './Redux/ReduxStore';
+import { useDispatch, useSelector } from 'react-redux';
+import { getNewMaxValueAC, getNewStartValueAC, setDataAC } from './Redux/CounterReducer';
 
 function App() {
-  const [startValue, setStartValue] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(1);
-  const [count, setCount] = useState<number | string>("Enter values and press 'set'");
+
+  const startValue = useSelector<AppStateType, number>(state => state.counter.startValue)
+  const maxValue = useSelector<AppStateType, number>(state => state.counter.maxValue)
+
+  const dispatch = useDispatch()
+
+  const [count, setCount] = useState<number | string>("Enter values and press 'set'")
 
   useEffect(() => {
-    let startValueAsString = localStorage.getItem('startValue');
-    if (startValueAsString) {
-      let newValue = JSON.parse(startValueAsString);
-      setStartValue(newValue);
+    let countAsString = localStorage.getItem('count');
+    if (countAsString) {
+      let newValue = JSON.parse(countAsString);
+      setCount(newValue);
   } }, [])
 
-useEffect(() => {
-  localStorage.setItem('startValue', JSON.stringify(startValue));
-}, [startValue]);
-
   useEffect(() => {
-    let maxValueAsString = localStorage.getItem('maxValue');
-    if (maxValueAsString) {
-      let newValue = JSON.parse(maxValueAsString);
-      setMaxValue(newValue);
-    } }, [])
-
-  useEffect(() => {
-    localStorage.setItem('maxValue', JSON.stringify(maxValue));
-  }, [maxValue]);
-
+    localStorage.setItem('count', JSON.stringify(count));
+  }, [count]);
 
   const setStringToCount = (maxValue: number, startValue: number) => {
     if (maxValue <= startValue || startValue < 0) {
       setCount('Incorrect value!');
-    } else setCount("Enter values and press 'set'");
+    } else  setCount("Enter values and press 'set'");
   };
 
   const getNewStartValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setStartValue(e.currentTarget.valueAsNumber);
+    dispatch(getNewStartValueAC(e.currentTarget.valueAsNumber));
     setStringToCount(maxValue, e.currentTarget.valueAsNumber)
   };
 
-
   const getNewMaxValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setMaxValue(e.currentTarget.valueAsNumber);
+    dispatch(getNewMaxValueAC(e.currentTarget.valueAsNumber));
     setStringToCount(e.currentTarget.valueAsNumber, startValue)
   };
 
   const setValueToMonitor = () => {
-    setCount(startValue);
+    dispatch(setDataAC(startValue, maxValue));
+    setCount(startValue)
   };
 
   const increaseOnOne = () => {
-    if (count < maxValue) {
-      setCount(count => typeof count === 'number' ? count + 1 : count);
-    }
+    if (typeof count !== 'number') return
+    if (count < maxValue) setCount(count + 1)
   };
 
   const reset = () => {
-    setCount(startValue);
+    setCount(startValue)
   };
-
 
   const getClassMonitor = () => {
     if (count === maxValue && count !== 0) {
-      return s.numberMax;
+      return styles.numberMax;
     } else if (count === 'Incorrect value!') {
-      return s.errorText;
+      return styles.errorText;
     } else if (count === "Enter values and press 'set'") {
-      return s.instructions;
-    } else return s.number;
+      return styles.instructions;
+    } else return styles.number;
   };
 
   const classMonitor = getClassMonitor()
 
-
   const getClassInputMax = () => {
     if ( maxValue < 0 || startValue >= maxValue ) {
-      return s.inputError;
-    } else return s.input;
+      return styles.inputError;
+    } else return styles.input;
   };
   const getClassInputStart = () => {
     if (startValue < 0 || maxValue < 0 || startValue >= maxValue ) {
-      return s.inputError;
-    } else return s.input;
+      return styles.inputError;
+    } else return styles.input;
   };
 
   const classInputMax = getClassInputMax()
   const classInputStart = getClassInputStart()
 
-  const isSetDisabled = count === ("Enter values and press 'set'" || 'Incorrect value!')
-
-
-  return (
-    <div className={s.allCounters}>
+  return <>
+    <div className={styles.allCounters}>
       <SetCounter
-        maxValue={maxValue}
-        startValue={startValue}
-        reset={reset}
+        count={count}
         setValueToMonitor={setValueToMonitor}
         classMonitor={classMonitor}
         classInputMax={classInputMax}
         classInputStart={classInputStart}
         getNewStartValue={getNewStartValue}
-
         getNewMaxValue={getNewMaxValue}/>
       <Counter
         reset={reset}
         increaseOnOne={increaseOnOne}
         count={count}
-        maxValue={maxValue}
-        startValue={startValue}
-        isSetDisabled={isSetDisabled}
         classMonitor={classMonitor}/>
     </div>
-  );
+  </>
 }
 
-
 export default App;
-
-

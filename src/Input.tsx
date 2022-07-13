@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import s from './App.module.css';
+import styles from './App.module.css';
 
 type InputPropsType = {
   titleInput: string
@@ -8,13 +8,11 @@ type InputPropsType = {
   value: number
 }
 
-
-
 export const Input = (props: InputPropsType) => {
 
   return (
-    <div className={s.string}>
-      <div className={s.value}>{props.titleInput}</div>
+    <div className={styles.string}>
+      <div className={styles.value}>{props.titleInput}</div>
       <input
         value={props.value}
         className={props.classInput}
